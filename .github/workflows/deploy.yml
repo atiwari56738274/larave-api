@@ -41,7 +41,12 @@ jobs:
           git config --global --add safe.directory /var/www/laravel_app
 
           cd /var/www/laravel_app # Navigate to your Laravel project directory
+
+          # Stash any local changes before pulling to prevent conflicts
+          git stash
           git pull origin main    # Pull the latest code from GitHub
+          git stash pop || true   # Apply stashed changes, ignore if no stash
+
           composer install --no-dev --optimize-autoloader # Reinstall dependencies
           php artisan config:cache  # Clear and cache config
           php artisan route:cache   # Clear and cache routes
