@@ -29,6 +29,17 @@ jobs:
     - name: Deploy to EC2
       run: |
         ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # Add the user to the www-data group and ensure correct permissions
+          sudo usermod -a -G www-data ${{ secrets.EC2_USER }}
+          sudo chown -R ${{ secrets.EC2_USER }}:www-data /var/www/laravel_app
+          sudo chmod -R 775 /var/www/laravel_app
+          sudo chmod -R 775 /var/www/laravel_app/storage
+          sudo chmod -R 775 /var/www/laravel_app/bootstrap/cache
+          sudo chmod 664 /var/www/laravel_app/.env
+
+          # Configure Git to trust the repository ownership
+          git config --global --add safe.directory /var/www/laravel_app
+
           cd /var/www/laravel_app # Navigate to your Laravel project directory
           git pull origin main    # Pull the latest code from GitHub
           composer install --no-dev --optimize-autoloader # Reinstall dependencies
