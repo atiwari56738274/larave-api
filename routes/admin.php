@@ -27,23 +27,3 @@ header('Access-Control-Allow-Origin: *');
 |
 */
 
-Route::group(['middleware' => 'auth:sanctum'], function() {
-  Route::resource('jobs', JobsController::class);
-  Route::resource('product-reviews', ProductReviewsController::class);
-  Route::resource('subscriptions', SubscriptionsController::class);
-  Route::put('subscriptions-details/{uuid}', [SubscriptionsController::class, 'updateSubscriptionDetails']);
-  Route::get('subscriptions-details-employer', [SubscriptionsController::class, 'getEmployerSubscriptionHistory']);
-  Route::resource('subscriptions-manuual-employer', SubscriptionsMannualEmployerController::class);
-  Route::resource('subscriptions-topup-employer', SubscriptionsTopupEmployerController::class);
-  Route::post('subscriptions-topup-employer/approved/{uuid}', [SubscriptionsTopupEmployerController::class, 'edit']);
-  Route::resource('candidate-testimonials', CandidateTestimonialController::class);
-  Route::get('company-reviews', [CompanyReviewsController::class, 'index']);
-  Route::delete('company-reviews/{uuid}', [CompanyReviewsController::class, 'destroy']);
-
-  Route::resource('candidate-data', CandidateDataController::class);
-  Route::post('candidate-profile-verified/{uuid}', [CandidateDataController::class, 'updateProfileVerifiedStatus']);
-  Route::resource('employer-data', EmployerDataController::class);
-  Route::post('employer-data-verified/{uuid}', [EmployerDataController::class, 'updateEmployerVerifiedStatus']);
-  Route::post('employer-profile-verified/{uuid}', [EmployerDataController::class, 'updateProfileVerifiedStatus']);
-});
- 

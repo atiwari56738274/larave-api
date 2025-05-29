@@ -25,15 +25,3 @@ header('Access-Control-Allow-Origin: *');
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::group(['middleware' => 'auth:sanctum'], function() {
-  Route::resource('core-job-title', CoreJobTitleController::class);
-  Route::resource('core-job-city', CoreJobCityController::class);
-  Route::resource('core-job-educations', CoreJobEducationsController::class);
-  Route::resource('core-job-skills', CoreJobSkillsController::class);
-  Route::resource('core-job-education-course', CoreJobEducationCourseController::class);
-  Route::resource('core-job-course-specialty', CoreJobEducationCourseSpecialtyController::class);
-  Route::resource('core-job-departments', CoreJobDepartmentsController::class);
-  Route::resource('core-job-company', CoreJobCompanyController::class);
-  Route::resource('core-industry', CoreIndustryController::class);
-});
