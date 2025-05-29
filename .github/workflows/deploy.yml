@@ -32,7 +32,6 @@ jobs:
           cd /var/www/laravel_app # Navigate to your Laravel project directory
           git pull origin main    # Pull the latest code from GitHub
           composer install --no-dev --optimize-autoloader # Reinstall dependencies
-          php artisan migrate --force # Run migrations (use --force in production)
           php artisan config:cache  # Clear and cache config
           php artisan route:cache   # Clear and cache routes
           php artisan view:cache    # Clear and cache views
