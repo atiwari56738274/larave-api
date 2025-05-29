@@ -1,0 +1,41 @@
+# .github/workflows/deploy.yml
+name: Deploy Laravel to EC2
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.7.0 # Use a specific version for stability
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add SSH host key
+      run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      run: |
+        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /var/www/laravel_app # Navigate to your Laravel project directory
+          git pull origin main    # Pull the latest code from GitHub
+          composer install --no-dev --optimize-autoloader # Reinstall dependencies
+          php artisan migrate --force # Run migrations (use --force in production)
+          php artisan config:cache  # Clear and cache config
+          php artisan route:cache   # Clear and cache routes
+          php artisan view:cache    # Clear and cache views
+          sudo systemctl reload php8.1-fpm # Reload PHP-FPM to apply changes
+          sudo systemctl reload nginx      # Reload Nginx
+        EOF
